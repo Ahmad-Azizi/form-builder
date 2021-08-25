@@ -1,10 +1,11 @@
 import React from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { connect, ConnectedProps } from 'react-redux';
-import styled from 'styled-components';
+import { DragDropBox } from '../../atoms';
 import { SelectionPane, Canvas } from '../../organisms';
+import { RootState } from '../../store';
 import { CreateFormActions } from './reducers';
 import { getCanvasFieldsListFromStore, getFormsListFromStore, getUpdateFormFromStore } from './selectors';
+import { Container } from './styles';
 
 interface CreateFormProps {
 	canvasFieldsList: object[];
@@ -14,10 +15,6 @@ interface CreateFormProps {
 	setFormsList: Function;
 	setUpdateForm: Function;
 };
-
-const Container = styled.div`
-	flex: 1;
-`;
 
 const CreateForm = ({
 	canvasFieldsList,
@@ -65,9 +62,7 @@ const CreateForm = ({
 	};
 
 	return (
-		<DragDropContext
-			onDragEnd={onDragEnd}
-		>
+		<DragDropBox onDragEnd={onDragEnd}>
 			<Container>
 				<SelectionPane
 					canvasFieldsList={canvasFieldsList}
@@ -84,11 +79,11 @@ const CreateForm = ({
 					setUpdateForm={setUpdateForm}
 				/>
 			</Container>
-		</DragDropContext>
+		</DragDropBox>
 	);
 };
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: RootState) => ({
 	canvasFieldsList: getCanvasFieldsListFromStore(state),
 	formsList: getFormsListFromStore(state),
 	updateForm: getUpdateFormFromStore(state)

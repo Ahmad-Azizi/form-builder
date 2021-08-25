@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import { SubmitButton } from '../../atoms';
+import { DragDropBox, DroppableBox, SubmitButton } from '../../atoms';
 import {
     CheckboxField,
     InputField,
@@ -10,54 +8,7 @@ import {
     TextField,
     DividerField
 } from '../../atoms';
-
-const Container = styled.div`
-    border: 1px solid black;
-    flex: 1,
-    display: flex;
-    margin: 2vh;
-    height: 95vh;
-`;
-const Header = styled.div`
-    margin-left: 1vh;
-`;
-const Heading = styled.h1`
-    color: grey;
-    font-weight: 800px;
-`;
-const MiddleContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    margin-left: 1vh;
-    margin-right: 1vh;
-`;
-const FormPreview = styled.div`
-    width: 75%;
-`;
-const Preview = styled.div`
-    border: 1px solid grey;
-    margin-top: 2vh;
-    margin-right: 1vh;
-    margin-bottom: 2vh;
-    height: 70vh;
-    padding-top: 3vh;
-    padding-left: 3vh;
-    padding-right: 3vh;
-`;
-const OtherData = styled.div`
-    width: 25%;
-`;
-const Data = styled.div`
-    border: 1px solid grey;
-    margin-top: 2vh;
-    margin-left: 1vh;
-    margin-bottom: 2vh;
-    height: 20vh;
-`;
-const Footer = styled.div`
-    margin-left: 1vh;
-`;
+import { Container, Data, Footer, FormPreview, Header, Heading, MiddleContainer, OtherData, Preview } from './styles';
 
 const PreviewForm = () => {
     const [form, setForm] = useState([]);
@@ -184,9 +135,7 @@ const PreviewForm = () => {
     };
 
     return (
-        <DragDropContext
-            onDragEnd={() => { }}
-        >
+        <DragDropBox onDragEnd={() => { }}>
             <Container>
                 <Header>
                     <Heading>
@@ -196,29 +145,21 @@ const PreviewForm = () => {
                 <MiddleContainer>
                     <FormPreview>
                         Preview
-                        <Droppable droppableId={'preview-form'} isDropDisabled={true}>
-                            {
-                                (provided) => (
-                                    <Preview
-                                        ref={provided.innerRef}
-                                        {...provided.droppableProps}
-                                    >
-                                        {
-                                            form?.length ? (
-                                                form?.map((obj: any, index: number) => (
-                                                    <div key={obj.id}>
-                                                        {renderForm(obj, index)}
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                'No Form Selected'
-                                            )
-                                        }
-                                        {provided.placeholder}
-                                    </Preview>
-                                )
-                            }
-                        </Droppable>
+                        <DroppableBox id={'preview-form'} isDropDisabled={true}>
+                            <Preview>
+                                {
+                                    form?.length ? (
+                                        form?.map((obj: any, index: number) => (
+                                            <div key={obj.id}>
+                                                {renderForm(obj, index)}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        'No Form Selected'
+                                    )
+                                }
+                            </Preview>
+                        </DroppableBox>
                     </FormPreview>
                     <OtherData>
                         Data
@@ -247,7 +188,7 @@ const PreviewForm = () => {
                     <SubmitButton onClick={errors.length ? () => { } : onSubmit} />
                 </Footer>
             </Container>
-        </DragDropContext>
+        </DragDropBox>
     );
 };
 

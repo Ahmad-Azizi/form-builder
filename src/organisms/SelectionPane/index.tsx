@@ -1,8 +1,7 @@
 import React from 'react';
-import { Droppable } from 'react-beautiful-dnd';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
-import { FormOption, ValidateButton } from '../../atoms';
+import { DroppableBox, FormOption, ValidateButton } from '../../atoms';
+import { Container, Form, Heading, Plus, SavedForms } from './styles';
 
 interface SelectionPaneProps {
     canvasFieldsList: object[];
@@ -11,40 +10,6 @@ interface SelectionPaneProps {
     setUpdateForm: Function;
 };
 
-const Container = styled.div`
-	background-color: #067AFF;
-	height: 100vh;
-  	width: 20%;
-  	float: left;
-  	display: flex;
-  	flex-direction: column;
-  	justify-content: center;
-  	align-items: center;
-`;
-const SavedForms = styled.div`
-    background-color: #F6F6F6;
-    width: 20%;
-    top: 0;
-    position: absolute;
-  	display: flex;
-  	flex-direction: column;
-  	justify-content: center;
-  	align-items: center;
-`;
-const Form = styled.label`
-    margin-left: 3vh;
-    font-weight: normal;
-`;
-const Heading = styled.h3`
-    color: white;
-    font-weight: bold;
-    flex-direction: row;
-`;
-const Plus = styled.label`
-    margin-left: 20vh;
-`;
-const SelectionPaneList = styled.div``;
-
 const SelectionPane = ({
     canvasFieldsList,
     formsList,
@@ -52,6 +17,7 @@ const SelectionPane = ({
     setUpdateForm
 }: SelectionPaneProps) => {
     const history = useHistory();
+
     const formOptions = [
         {
             type: 'input-field',
@@ -86,10 +52,10 @@ const SelectionPane = ({
     };
 
     const onValidateForm = () => {
-		if (canvasFieldsList.length) {
-			history.push('/preview-form', { form: canvasFieldsList });
-		}
-	};
+        if (canvasFieldsList.length) {
+            history.push('/preview-form', { form: canvasFieldsList });
+        }
+    };
 
     return (
         <Container>
@@ -111,29 +77,21 @@ const SelectionPane = ({
                         }
                     </SavedForms>
                 ) : (
-                    <ValidateButton onClick={onValidateForm}/>
+                    <ValidateButton onClick={onValidateForm} />
                 )
             }
             <Heading>
                 Form Components
             </Heading>
-            <Droppable droppableId={'selection-pane-form-components'} isDropDisabled={true}>
-                {
-                    (provided) => (
-                        <SelectionPaneList
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                        >
-                            {
-                                formOptions.map(({ type, name }, index) => (
-                                    <FormOption key={type} id={type} index={index} name={name} />
-                                ))
-                            }
-                            {provided.placeholder}
-                        </SelectionPaneList>
-                    )
-                }
-            </Droppable>
+            <DroppableBox id={'selection-pane-form-components'} isDropDisabled={true}>
+                <div>
+                    {
+                        formOptions?.map(({ type, name }, index) => (
+                            <FormOption key={type} id={type} index={index} name={name} />
+                        ))
+                    }
+                </div>
+            </DroppableBox>
         </Container>
     );
 };

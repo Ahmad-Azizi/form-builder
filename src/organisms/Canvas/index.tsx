@@ -8,9 +8,9 @@ import {
 	ValidateButton,
 	SaveButton
 } from '../../atoms';
-import styled from 'styled-components';
-import { Droppable } from 'react-beautiful-dnd';
 import { useHistory } from 'react-router-dom';
+import { Buttons, CanvasList, Container, Heading } from './styles';
+import DroppableBox from '../../atoms/DroppableBox';
 
 interface CanvasProps {
 	canvasFieldsList: any[];
@@ -20,32 +20,6 @@ interface CanvasProps {
 	setCanvasFieldsList: Function;
 	setUpdateForm: Function;
 };
-
-const Container = styled.div`
-    background-color: white
-    width: 70%;
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-  	justify-content: center;
-	align-items: center;
-`;
-const Heading = styled.h3`
-    color: grey;
-    font-weight: bold;
-`;
-const CanvasList = styled.div`
-	height: 85vh;
-    width: 100vh;
-`;
-const CanvasListItem = styled.div``;
-const Buttons = styled.div`
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	width: 50vh;
-`;
 
 const Canvas = ({
 	canvasFieldsList,
@@ -57,13 +31,48 @@ const Canvas = ({
 }: CanvasProps) => {
 	const history = useHistory();
 
+	const onDuplicate = (type: string, index: number) => {
+		const newArr = [...canvasFieldsList];
+		const newObj = {
+			id: new Date().toJSON(),
+			type,
+			props: {}
+		};
+		newArr.splice(index + 1, 0, newObj);
+		setCanvasFieldsList(newArr);
+	};
+
+	const onEdit = (id: string, type: string, index: number) => {
+		if (type === 'text-field') {
+			const obj = {
+				...canvasFieldsList[index],
+				props: {
+					...canvasFieldsList[index].props
+				}
+			};
+			const { props } = obj;
+			props.label = prompt('Edit label name');
+			const newArr = [...canvasFieldsList];
+			newArr[index] = obj;
+			setCanvasFieldsList(newArr);
+		}
+	};
+
+	const onDelete = (index: number) => {
+		const newArr = [...canvasFieldsList];
+		newArr.splice(index, 1);
+		setCanvasFieldsList(newArr);
+	};
+
 	const renderField = ({ id, type, props }: any, index: number) => {
 		if (type === 'input-field') {
 			return (
 				<InputField
 					id={id}
 					index={index}
-					getInput={(input: string) => {}}
+					onDuplicate={() => onDuplicate(type, index)}
+					onDelete={() => onDelete(index)}
+					getInput={(input: string) => { }}
 				/>
 			);
 		} else if (type === 'checkbox-field') {
@@ -71,7 +80,9 @@ const Canvas = ({
 				<CheckboxField
 					id={id}
 					index={index}
-					getChecked={(checked: boolean) => {}}
+					onDuplicate={() => onDuplicate(type, index)}
+					onDelete={() => onDelete(index)}
+					getChecked={(checked: boolean) => { }}
 				/>
 			);
 		} else if (type === 'file-upload-field') {
@@ -79,7 +90,9 @@ const Canvas = ({
 				<FileUpload
 					id={id}
 					index={index}
-					getFile={(file: any) => {}}
+					onDuplicate={() => onDuplicate(type, index)}
+					onDelete={() => onDelete(index)}
+					getFile={(file: any) => { }}
 				/>
 			);
 		} else if (type === 'text-field') {
@@ -87,6 +100,9 @@ const Canvas = ({
 				<TextField
 					id={id}
 					index={index}
+					onDuplicate={() => onDuplicate(type, index)}
+					onEdit={() => onEdit(id, type, index)}
+					onDelete={() => onDelete(index)}
 					label={props?.label}
 				/>
 			);
@@ -95,6 +111,8 @@ const Canvas = ({
 				<DividerField
 					id={id}
 					index={index}
+					onDuplicate={() => onDuplicate(type, index)}
+					onDelete={() => onDelete(index)}
 				/>
 			);
 		}
@@ -133,25 +151,17 @@ const Canvas = ({
 			<Heading>
 				{`Drop & Create`}
 			</Heading>
-			<Droppable droppableId={'canvas'}>
-				{
-					(provided) => (
-						<CanvasList
-							ref={provided.innerRef}
-							{...provided.droppableProps}
-						>
-							{
-								canvasFieldsList?.map((obj, index) => (
-									<CanvasListItem key={obj?.id}>
-										{renderField(obj, index)}
-									</CanvasListItem>
-								))
-							}
-							{provided.placeholder}
-						</CanvasList>
-					)
-				}
-			</Droppable>
+			<DroppableBox id={'canvas'}>
+				<CanvasList>
+					{
+						canvasFieldsList?.map((obj, index) => (
+							<div key={obj?.id}>
+								{renderField(obj, index)}
+							</div>
+						))
+					}
+				</CanvasList>
+			</DroppableBox>
 			{
 				updateForm?.name ? (
 					<Buttons>

@@ -1,47 +1,40 @@
 import React from 'react';
-import { Draggable } from 'react-beautiful-dnd';
-import styled from 'styled-components';
+import DraggableBox from '../DraggableBox';
+import { Text } from './styles';
 
 interface TextFieldProps {
 	id: string;
 	index: number;
 	isDragDisabled?: boolean;
+	onDuplicate?: () => void;
+	onEdit?: () => void;
+	onDelete?: () => void;
 	label?: string;
 };
-
-const Container = styled.div``;
-const Text = styled.label`
-	font-weight: bold;
-`;
 
 const TextField = ({
 	id,
 	index,
-	isDragDisabled,
-	label
+	isDragDisabled = false,
+	onDuplicate = () => { },
+	onEdit = () => { },
+	onDelete = () => { },
+	label = 'Label Text'
 }: TextFieldProps) => {
 	return (
-		<Draggable draggableId={id} index={index} isDragDisabled={isDragDisabled}>
-			{
-				provided => (
-					<Container
-						{...provided.draggableProps}
-						{...provided.dragHandleProps}
-						ref={provided.innerRef}
-					>
-						<Text>
-							{label}
-						</Text>
-					</Container>
-				)
-			}
-		</Draggable>
+		<DraggableBox
+			id={id}
+			index={index}
+			isDragDisabled={isDragDisabled}
+			onDuplicate={onDuplicate}
+			onEdit={onEdit}
+			onDelete={onDelete}
+		>
+			<Text>
+				{label}
+			</Text>
+		</DraggableBox>
 	);
-};
-
-TextField.defaultProps = {
-	label: 'Label Text',
-	isDragDisabled: false
 };
 
 export default TextField;

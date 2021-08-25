@@ -1,21 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
-import styled from 'styled-components';
+import DraggableBox from '../DraggableBox';
+import { Container, TextArea } from './styles';
 
 interface InputFieldProps {
     id: string;
     index: number;
     isDragDisabled?: boolean;
+    onDuplicate?: () => void;
+    onEdit?: () => void;
+    onDelete?: () => void;
     getInput: Function;
 };
-
-const Container = styled.div``;
-const TextArea = styled.input``;
 
 const InputField = ({
     id,
     index,
-    isDragDisabled,
+    isDragDisabled = false,
+    onDuplicate = () => { },
+    onEdit = () => { },
+    onDelete = () => { },
     getInput
 }: InputFieldProps) => {
     const [input, setInput] = useState('');
@@ -29,29 +32,25 @@ const InputField = ({
     });
 
     return (
-        <Draggable draggableId={id} index={index} isDragDisabled={isDragDisabled}>
-            {
-                (provided) => (
-                    <Container
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                    >
-                        <TextArea
-                            type={'text'}
-                            value={input}
-                            onChange={isDragDisabled ? ({ target: { value } }) => setInput(value) : () => {}}
-                            placeholder={'Enter text here'}
-                        />
-                    </Container>
-                )
-            }
-        </Draggable>
+        <DraggableBox
+            id={id}
+            index={index}
+            isDragDisabled={isDragDisabled}
+            onDuplicate={onDuplicate}
+            onEdit={onEdit}
+            isEditable={false}
+            onDelete={onDelete}
+        >
+            <Container>
+                <TextArea
+                    type={'text'}
+                    value={input}
+                    onChange={isDragDisabled ? ({ target: { value } }) => setInput(value) : () => { }}
+                    placeholder={'Enter text here'}
+                />
+            </Container>
+        </DraggableBox>
     );
-};
-
-InputField.defaultProps = {
-    isDragDisabled: false
 };
 
 export default InputField;

@@ -1,21 +1,23 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
-import styled from 'styled-components';
+import { DraggableBox } from '..';
+import React, { useState, useCallback, useEffect } from 'react';;
 
 interface CheckboxFieldProps {
     id: string;
     index: number;
     isDragDisabled?: boolean;
+    onDuplicate?: () => void;
+    onEdit?: () => void;
+    onDelete?: () => void;
     getChecked: Function;
 };
-
-const Container = styled.div``;
-const Checkbox = styled.input``;
 
 const CheckboxField = ({
     id,
     index,
     isDragDisabled,
+    onDuplicate = () => { },
+    onEdit = () => { },
+    onDelete = () => { },
     getChecked
 }: CheckboxFieldProps) => {
     const [checked, setChecked] = useState(false);
@@ -29,23 +31,21 @@ const CheckboxField = ({
     });
 
     return (
-        <Draggable draggableId={id} index={index} isDragDisabled={isDragDisabled}>
-            {
-                (provided) => (
-                    <Container
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                    >
-                        <Checkbox
-                            type={'checkbox'}
-                            checked={checked}
-                            onChange={isDragDisabled ? ({ target: { checked } }) => setChecked(checked) : () => {}}
-                        />
-                    </Container>
-                )
-            }
-        </Draggable>
+        <DraggableBox
+            id={id}
+            index={index}
+            isDragDisabled={isDragDisabled}
+            onDuplicate={onDuplicate}
+            onEdit={onEdit}
+            isEditable={false}
+            onDelete={onDelete}
+        >
+            <input
+                type={'checkbox'}
+                checked={checked}
+                onChange={isDragDisabled ? ({ target: { checked } }) => setChecked(checked) : () => { }}
+            />
+        </DraggableBox>
     );
 };
 

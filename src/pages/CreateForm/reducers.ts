@@ -1,4 +1,4 @@
-import { createActions, createReducer } from 'reduxsauce';
+import { createActions, createReducer, ActionTypes } from 'reduxsauce';
 
 /* Types and Action Creators */
 const { Types, Creators } = createActions({
@@ -18,17 +18,17 @@ const INITIAL_STATE = {
 };
 
 /* Reducers */
-const setCanvasFieldsList = (state: any, { canvasFieldsList }: any) => ({
+const setCanvasFieldsList = (state: any, { canvasFieldsList }: ActionTypes) => ({
     ...state,
     canvasFieldsList
 });
 
-const setFormsList = (state: any, { formsList }: any) => ({
+const setFormsList = (state: any, { formsList }: ActionTypes) => ({
     ...state,
     formsList
 });
 
-const setUpdateForm = (state: any, { updateForm }: any) => ({
+const setUpdateForm = (state: any, { updateForm }: ActionTypes) => ({
     ...state,
     updateForm
 });

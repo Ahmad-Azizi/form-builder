@@ -1,3 +1,6 @@
+import DragDropBox from './DragDropBox';
+import DroppableBox from './DroppableBox';
+import DraggableBox from './DraggableBox';
 import FormOption from './FormOption';
 import InputField from './InputField';
 import CheckboxField from './CheckboxField';
@@ -9,6 +12,9 @@ import SaveButton from './SaveButton';
 import SubmitButton from './SubmitButton';
 
 export {
+    DragDropBox,
+    DroppableBox,
+    DraggableBox,
     FormOption,
     InputField,
     CheckboxField,
